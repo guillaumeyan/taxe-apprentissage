@@ -24,10 +24,15 @@ public class MyService {
     @Value("${input-file}")
     private String inputFile;
 
+    @Value("${output-file}")
+    private String outputFile;
+
     private final List<University> universitiesResult = new ArrayList<>();
 
     @PostConstruct
     public void buildTaxeApprentissage() throws IOException {
+        log.info("input file come from {}", inputFile);
+        log.info("output file will be generated in {}", outputFile);
         Resource resource = resourceLoader.getResource("file:" + inputFile);
         FileInputStream excelFile = new FileInputStream(resource.getFile());
         try (Workbook workbook = new XSSFWorkbook(excelFile)) {
@@ -45,7 +50,7 @@ public class MyService {
             workbook.getSheetAt(1).autoSizeColumn(5);
             workbook.getSheetAt(1).autoSizeColumn(6);
             workbook.getSheetAt(1).autoSizeColumn(7);
-            try (FileOutputStream outputStream = new FileOutputStream("result.xlsx")) {
+            try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 workbook.write(outputStream);
             }
         }

@@ -2,3 +2,4 @@ logging:
   pattern:
     console: "%d  %-5level [%thread] --- %logger{36}[%L] %msg%n"
 input-file: C:\projets\perso\decompte-taxe-d-apprentissage.xlsx
+output-file: C:\projets\perso\result.xlsx
