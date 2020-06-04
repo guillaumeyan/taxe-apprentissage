@@ -1,6 +1,7 @@
 package com.guillaumeyan.taxeapprentissage;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -33,7 +36,12 @@ public class MyService {
     public void buildTaxeApprentissage() throws IOException {
         log.info("input file come from {}", inputFile);
         log.info("output file will be generated in {}", outputFile);
-        Resource resource = resourceLoader.getResource("file:" + inputFile);
+        Resource resource;
+        if(Paths.get(inputFile).isAbsolute()) {
+            resource = resourceLoader.getResource("file:" + inputFile);
+        } else {
+            resource = resourceLoader.getResource("classpath:" + inputFile);
+        }
         FileInputStream excelFile = new FileInputStream(resource.getFile());
         try (Workbook workbook = new XSSFWorkbook(excelFile)) {
             Sheet informationSheet = workbook.getSheetAt(0);
